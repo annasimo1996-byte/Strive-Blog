@@ -1,0 +1,19 @@
+{
+  "name": "desktop",
+  "version": "1.0.0",
+  "description": "my backend for Strive Blog",
+  "license": "ISC",
+  "author": "Anna Maria Simonetti",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "dev": "nodemon main.js" 
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
