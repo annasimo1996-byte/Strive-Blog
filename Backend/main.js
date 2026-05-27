@@ -1,4 +1,4 @@
-const startDb = require ("./confing/db.js")
+const startDb = require ("./config/db.js")
 const router = require ("./modules/users/users.root.js")
 
 const express = require ("express")

@@ -11,7 +11,7 @@ const initDb = async () => {
 }
 
 const startDb = async (PORT, server) => {
-    initDb()
+    await initDb()
     server.listen(PORT, () =>{console.log("Server in esecuzione all'indirizzo localhost:" , PORT)})
 }
 
