@@ -2,7 +2,9 @@ const userService = require("./users.service.js")
 
 const getUsers = async (req, res) => {
     try {
-        const users = await userService.getAllUsers()
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 5
+        const users = await userService.getAllUsers(page, limit)
         res.status(200).json(users)
     } catch (error) {
         //res.status(500).json({message: error.message})
@@ -32,8 +34,38 @@ const createUser = async (req, res) => {
     }
 }
 
+const upDateUser = async (req, res) => {
+    try {
+        const updatedUser = await userService.upDateUser(req.params.id, req.body)
+        res.status(201).json(updatedUser)
+    } catch (error) {
+        console.log("ERRORE 400 : Errore nel salvataggio ")
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const deletedUser = await userService.deleteUser(req.params.id)
+        if(!deletedUser){
+            return res.status(404).json({
+                message : "Utente non trovato"
+            })
+        }
+        res.status(200).json({
+            message : "Utente eliminato"
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+
+    }
+}
+
 module.exports = {
     getUsers,
     getUser,
     createUser,
+    upDateUser,
+    deleteUser,
 }

@@ -7,9 +7,10 @@
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
-    "dev": "nodemon main.js" 
+    "dev": "nodemon main.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "mongoose": "^9.6.2"
   },

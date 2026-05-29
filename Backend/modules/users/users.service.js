@@ -1,7 +1,16 @@
 const user = require("./users.schema.js")
 
-const getAllUsers = async () => {
-    return await user.find()
+const getAllUsers = async (page = 1, limit = 5) => {
+    const skip = (page-1) * limit
+    const users = await user.find().skip(skip).limit(limit)
+    const total = await user.countDocuments()
+    return {
+        data : users,
+        page,
+        limit,
+        total,
+        totalPages : Math.ceil(total / limit)
+    }
 }
 
 const getUserById = async (id) => {
@@ -13,8 +22,18 @@ const createUser = async (userData) => {
     return await newUser.save()
 }
 
+const upDateUser = async (id, body) =>{
+    return await user.findByIdAndUpdate(id, body, {new:true})
+}
+
+const deleteUser = async (id) =>{
+    return await user.findByIdAndDelete(id)
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
     createUser,
+    upDateUser,
+    deleteUser
 }
