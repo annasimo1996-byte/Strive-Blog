@@ -11,7 +11,7 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/users" , userRouter)
-server.use("/posts", routerPost)
+server.use("/blogPosts", routerPost)
 
 
 

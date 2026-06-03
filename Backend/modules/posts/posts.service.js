@@ -5,7 +5,7 @@ const getAllPosts = async (page = 1, limit = 5) => {
     const posts = await post.find().skip(skip).limit(limit)
     const total = await post.countDocuments()
     return {
-        data : post,
+        data : posts,
         page,
         limit,
         total,
