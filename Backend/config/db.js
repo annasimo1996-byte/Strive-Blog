@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const connectString = "mongodb+srv://AnnaSimo:BtE2FMfK1VNIWSYf@epibooks.z4vedwy.mongodb.net/"
+const connectString = process.env.MONGODB_CONNECT
 
 const initDb = async () => {
     try {

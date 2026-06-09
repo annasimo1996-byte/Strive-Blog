@@ -1,18 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { Container, Image } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
-import posts from "../../data/posts.json";
 import "./styles.css";
 const Blog = props => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
-  const params = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
-    const { id } = params;
-    const blog = posts.find(post => post._id.toString() === id);
+
+    const blog = async () => {
+      try {
+
+        setLoading(true);
+
+        const response = await fetch(`http://localhost:9999/blogPosts?page=1`);
+
+        if (!response.ok) throw new Error("Errore nel caricamento dei post");
+
+        const posts = await response.json();
+        console.log(posts)
+
+        const cleanPosts = posts.data.map(post => ({
+          ...post,
+          author: typeof post.author === 'object' && post.author !== null
+            ? post.author
+            : { name: post.author || "Autore Anonimo", avatar: "https://picsum.photos/50/50" }
+        }));
+
+        setBlog(cleanPosts);
+      } catch (err) {
+        console.error("Errore fetch:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
     if (blog) {
       setBlog(blog);

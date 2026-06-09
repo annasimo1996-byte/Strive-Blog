@@ -1,4 +1,27 @@
 const postService = require("./posts.service.js")
+const cloudinary = require("../../config/cloudinary.js")
+
+const cloudinaryUpload = async (file, folder) => {
+    if (!file) {
+        throw new Error("Non hai caricato il file")
+    }
+    if (!file.mimetype) {
+        throw new Error("Il file non è un immagine")
+    }
+
+    const fileUrl = `data: ${file.mimetype}; base64, ${file.buffer.toString("base64")}`
+    const uploadImg = await cloudinary.uploader.upload(fileUrl, { folder })
+}
+
+const uploadCover = async (req, res) => {
+    try {
+        const coverUrl = await cloudinaryUpload(req.file, "cover")
+        const coverUpDate = await postService.upDatePostCover(req.params.id, coverUrl)
+
+    } catch (err) {
+        console.error(err)
+    }
+}
 
 const getPosts = async (req, res) => {
     try {
@@ -30,7 +53,7 @@ const createPost = async (req, res) => {
         const newPost = await postService.createPost(req.body)
         res.status(201).json(newPost)
     } catch (error) {
-        console.log("ERRORE 400 : Errore nel salvataggio " , error)
+        console.log("ERRORE 400 : Errore nel salvataggio ", error)
     }
 }
 
@@ -46,13 +69,13 @@ const upDatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const deletedPost = await postService.deletePost(req.params.id)
-        if(!deletedPost){
+        if (!deletedPost) {
             return res.status(404).json({
-                message : "Post non trovato"
+                message: "Post non trovato"
             })
         }
         res.status(200).json({
-            message : "Post eliminato"
+            message: "Post eliminato"
         })
     } catch (error) {
         res.status(500).json({
@@ -66,6 +89,7 @@ module.exports = {
     getPosts,
     getPost,
     createPost,
+    uploadCover,
     upDatePost,
     deletePost,
 }

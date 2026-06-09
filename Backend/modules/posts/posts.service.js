@@ -25,6 +25,9 @@ const createPost = async (postData) => {
 const upDatePost = async (id, body) =>{
     return await post.findByIdAndUpdate(id, body, {new:true})
 }
+const upDatePostCover = async (id, coverUrl)=>{
+    return await post.findByIdAndUpdate(id, {cover: coverUrl}, {new : true})
+}
 
 const deletePost = async (id) =>{
     return await post.findByIdAndDelete(id)
@@ -35,5 +38,6 @@ module.exports = {
     getPostById,
     createPost,
     upDatePost,
+    upDatePostCover,
     deletePost
 }

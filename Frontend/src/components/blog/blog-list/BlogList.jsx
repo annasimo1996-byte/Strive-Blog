@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row, Button } from "react-bootstrap";
-import postsLocale from "../../../data/posts.json";
 import BlogItem from "../blog-item/BlogItem";
 
 const BlogList = props => {
 
-  const [blogPosts, setBlogPosts] = useState(postsLocale);
+  const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);

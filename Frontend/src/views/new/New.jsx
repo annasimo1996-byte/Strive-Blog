@@ -13,7 +13,7 @@ const NewBlogPost = props => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Lifestyle");
   const [authorName, setAuthorName] = useState("");
-  const [coverUrl, setCoverUrl] = useState("");
+  const [coverUrl, setCoverUrl] = useState(null);
   const [readTimeValue, setReadTimeValue] = useState(1);
 
   const handleChange = useCallback(value => {
@@ -24,14 +24,14 @@ const NewBlogPost = props => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!title || !text || text.trim() === "<p></p>") {
       alert("Inserisci un titolo e un contenuto prima di inviare!");
       return;
     }
-    
+
     const nuovoPost = {
-     title: title,
+      title: title,
       category: category,
       content: text,
       cover: coverUrl || "https://picsum.photos/1000/300",
@@ -41,7 +41,7 @@ const NewBlogPost = props => {
       },
       author: {
         name: authorName,
-        avatar: "https://picsum.photos/50/50" 
+        avatar: "https://picsum.photos/50/50"
       }
     };
     try {
@@ -54,6 +54,24 @@ const NewBlogPost = props => {
       });
 
       if (response.ok) {
+
+        const savedPost = response.json()
+
+        if (coverUrl) {
+          const formData = new FormData()
+          formData.append("cover", coverUrl)
+
+          const coverResponse = await fetch(`http://localhost:9999/blogPosts/${savedPost._id}/cover`, {
+            method: "PATCH",
+            body: formData
+          })
+
+          if(!coverResponse.ok){
+            throw new Error ("Caricamenti cover non riuscita")
+          }
+        }
+
+
         alert("Post creato con successo!");
         navigate("/");
       } else {
@@ -82,29 +100,41 @@ const NewBlogPost = props => {
         </Form.Group>
         <Form.Group controlId="blog-author" className="mt-3">
           <Form.Label>Email o Nome Autore</Form.Label>
-          <Form.Control 
-            size="lg" 
-            placeholder="Es: test33@gmail.com" 
+          <Form.Control
+            size="lg"
+            placeholder="Es: test33@gmail.com"
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
             required
           />
         </Form.Group>
 
-        <Form.Group controlId="blog-cover" className="mt-3">
+        {/*<Form.Group controlId="blog-cover" className="mt-3">
           <Form.Label>URL Immagine di Copertina</Form.Label>
-          <Form.Control 
-            size="lg" 
-            placeholder="Es: https://picsum.photos/1000/300" 
+          <Form.Control
+            size="lg"
+            type="file"
+            accept="image/*"
             value={coverUrl}
-            onChange={(e) => setCoverUrl(e.target.value)}
+            onChange={(e) => setCoverUrl(e.target.files)}
+          />
+        </Form.Group>*/}
+
+        <Form.Group controlId="blog-cover" className="mt-3">
+          <Form.Label>Carica un immagine</Form.Label>
+          <Form.Control
+            name="cover"
+            size="lg"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setCoverUrl(e.target.files?.[0])}
           />
         </Form.Group>
 
         <Form.Group controlId="blog-readtime" className="mt-3">
           <Form.Label>Tempo di lettura (in minuti)</Form.Label>
-          <Form.Control 
-            size="lg" 
+          <Form.Control
+            size="lg"
             type="number"
             min="1"
             value={readTimeValue}
@@ -117,7 +147,7 @@ const NewBlogPost = props => {
           <Form.Control
             size="lg"
             as="select"
-            value={category} 
+            value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
             <option>Lifestyle</option>

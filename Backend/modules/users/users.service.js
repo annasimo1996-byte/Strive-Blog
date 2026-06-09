@@ -26,6 +26,10 @@ const upDateUser = async (id, body) =>{
     return await user.findByIdAndUpdate(id, body, {new:true})
 }
 
+const upDateUserAvatar = async(id, avatarUrl)=>{
+    return await user.findByIdAndUpdate(id, {avatar : avatarUrl}, {new:true})
+}
+
 const deleteUser = async (id) =>{
     return await user.findByIdAndDelete(id)
 }
@@ -35,5 +39,6 @@ module.exports = {
     getUserById,
     createUser,
     upDateUser,
+    upDateUserAvatar,
     deleteUser
 }
