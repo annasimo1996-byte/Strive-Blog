@@ -43,7 +43,7 @@ const NewBlogPost = props => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:9999/blogPosts/", {
+      const response = await fetch(`${import.meta.env.VITE_SERVERURL}/blogPosts/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const NewBlogPost = props => {
           const formData = new FormData()
           formData.append("cover", coverUrl)
 
-          const coverResponse = await fetch(`http://localhost:9999/blogPosts/${savedPost._id}/cover`, {
+          const coverResponse = await fetch(`${import.meta.env.VITE_SERVERURL}/blogPosts/${savedPost._id}/cover`, {
             method: "PATCH",
             headers: {
               "Authorization": `Bearer ${token}`

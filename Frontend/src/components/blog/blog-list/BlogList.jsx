@@ -16,7 +16,7 @@ const BlogList = props => {
       try {
         setLoading(true);
 
-        const response = await fetch(`http://localhost:9999/blogPosts?page=${currentPage.toString()}`);
+        const response = await fetch(`${import.meta.env.VITE_SERVERURL}/blogPosts?page=${currentPage.toString()}`);
 
         if (!response.ok) throw new Error("Errore nel caricamento dei post");
 

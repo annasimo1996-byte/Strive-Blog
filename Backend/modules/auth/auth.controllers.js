@@ -27,7 +27,7 @@ const getMe = async (req, res) => {
 
 const googleCallback = (req, res) => {
     const accessToken = authService.createAccessToken(req.user)
-    const frontendUrl = "http://localhost:3000"
+    const frontendUrl = process.env.FRONTENDURL
 
     res.redirect(`${frontendUrl}/login?token=${accessToken}`)
 }

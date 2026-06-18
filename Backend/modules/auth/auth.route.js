@@ -30,7 +30,7 @@ authRouter.get(
     checkGoogleOAuthConfig,
     passport.authenticate("google", {
         session: false,
-        failureRedirect: `http://localhost:3000/login?oauthError=google`,
+        failureRedirect: `${process.env.FRONTENDURL}/login?oauthError=google`,
     }),
     authControllers.googleCallback
 )

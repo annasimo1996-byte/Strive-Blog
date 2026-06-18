@@ -22,7 +22,7 @@ function App() {
       }
 
       try {
-        const response = await fetch("http://localhost:9999/auth/me", {
+        const response = await fetch(`${import.meta.env.VITE_SERVERURL}/auth/me`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`

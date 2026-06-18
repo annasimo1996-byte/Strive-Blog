@@ -31,7 +31,7 @@ const LoginPage = ({ setIsLogged }) => {
 
 
     try {
-      const response = await fetch('http://localhost:9999/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_SERVERURL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const LoginPage = ({ setIsLogged }) => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:9999/auth/google";
+    window.location.href = `${import.meta.env.VITE_SERVERURL}/auth/google`;
   };
 
   return (
