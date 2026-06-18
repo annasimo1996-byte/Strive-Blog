@@ -22,7 +22,7 @@ function App() {
       }
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_SERVERURL}/auth/me`, {
+        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/auth/me`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`
