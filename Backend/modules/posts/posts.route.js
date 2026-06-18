@@ -3,15 +3,29 @@ const express = require ("express")
 const postsSchema = require("./posts.schema.js")
 const post = express.Router()
 const upload = require("../../config/multer.js")
+const authMiddleware = require("../../middlewares/auth/authMiddleware.js")
 
+//ROTTE DEI POST
 post.get("/" , postsControllers.getPosts) 
 post.get("/:id" , postsControllers.getPost)
-post.post("/" , postsControllers.createPost)
 
-post.patch("/:id/cover", upload.single("cover"), postsControllers.uploadCover)
+post.post("/", authMiddleware, postsControllers.createPost)
 
-post.put("/:id", postsControllers.upDatePost)
+post.patch("/:id/cover", authMiddleware, upload.single("cover"), postsControllers.uploadCover)
 
-post.delete("/:id", postsControllers.deletePost)
+post.put("/:id", authMiddleware, postsControllers.upDatePost)
+
+post.delete("/:id", authMiddleware, postsControllers.deletePost)
+
+//ROTTE DEI COMMENTI
+post.get("/:id/comments", postsControllers.getComments)
+post.get("/:id/comments/:commentId", postsControllers.getComment)
+
+
+post.post("/:id/comments", authMiddleware, postsControllers.addComment)
+
+post.put("/:id/comment/:commentId", authMiddleware, postsControllers.updateComment)
+
+post.delete("/:id/comment/:commentId", authMiddleware, postsControllers.deleteComment)
 
 module.exports = post

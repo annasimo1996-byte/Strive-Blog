@@ -1,26 +1,28 @@
 const userService = require("./users.service.js")
 const cloudinary = require("../../config/cloudinary.js")
-const sendEmail = require("../email/index.js")
 
 const cloudinaryUpload = async (file, folder) => {
     if (!file) {
         throw new Error("Non hai caricato il file")
     }
-    if (!file.mimetype) {
-        throw new Error("Il file non è un immagine")
+    if (!file.mimetype.startsWith("image/")) {
+        throw new Error("Il file non è un'immagine")
     }
 
-    const fileUrl = `data: ${file.mimetype}; base64, ${file.buffer.toString("base64")}`
+    const fileUrl = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`
     const uploadImg = await cloudinary.uploader.upload(fileUrl, { folder })
+    return uploadImg.secure_url
 }
 
 const avatarUpload = async (req, res) => {
     try {
         const avatarUrl = await cloudinaryUpload(req.file, "avatar")
         const avatarUpDate = await userService.upDateUserAvatar(req.params.id, avatarUrl)
-
+        if (!avatarUpDate) return res.status(404).json({ message: "Avatar non trovato" })
+        res.status(200).json(avatarUpDate)
     } catch (err) {
         console.error(err)
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -52,18 +54,17 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
     try {
         const newUser = await userService.createUser(req.body)
+        const userResponse = newUser.toObject()
+        delete userResponse.password
 
-        await sendEmail(
-            "shawna.schoen@ethereal.email",
-            "NEW USER REGISTERED",
-            "A new user is registered"
-        );
-
-        res.status(201).json(newUser)
-
+        res.status(201).json(userResponse)
 
     } catch (error) {
-        console.log("ERRORE 400 : Errore nel salvataggio ")
+        console.log("ERRORE 400 : Errore nel salvataggio ", error)
+        return res.status(400).json({
+            message: "Impossibile creare l'utente. Verifica i dati inseriti o se l'email esiste già.",
+            error: error.message
+        })
     }
 }
 

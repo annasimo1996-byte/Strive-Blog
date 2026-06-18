@@ -17,6 +17,14 @@ const getUserById = async (id) => {
     return await user.findById(id)
 }
 
+const getUserByEmail = async (email)=>{
+    return user.findOne({email})
+}
+
+const getUserByEmailAndPassword = async (email)=>{
+    return user.findOne({email}).select("+password")
+}
+
 const createUser = async (userData) => {
     const newUser = new user(userData)
     return await newUser.save()
@@ -40,5 +48,7 @@ module.exports = {
     createUser,
     upDateUser,
     upDateUserAvatar,
-    deleteUser
+    deleteUser,
+    getUserByEmail,
+    getUserByEmailAndPassword
 }

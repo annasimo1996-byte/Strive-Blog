@@ -3,15 +3,17 @@ const express = require ("express")
 const usersSchema = require("./users.schema.js")
 const userRouter = express.Router()
 const upload = require ("../../config/multer.js")
+const authMiddleware = require("../../middlewares/auth/authMiddleware.js")
 
-userRouter.get("/" , usersControllers.getUsers) 
-userRouter.get("/:id" , usersControllers.getUser)
+userRouter.get("/", authMiddleware, usersControllers.getUsers) 
+userRouter.get("/:id", authMiddleware, usersControllers.getUser)
+
 userRouter.post("/" , usersControllers.createUser)
 
-userRouter.put("/:id", usersControllers.upDateUser)
+userRouter.put("/:id", authMiddleware, usersControllers.upDateUser)
 
-userRouter.delete("/:id", usersControllers.deleteUser)
+userRouter.delete("/:id", authMiddleware, usersControllers.deleteUser)
 
-userRouter.patch("/:id/avatar", upload.single("avatar"), usersControllers.avatarUpload)
+userRouter.patch("/:id/avatar", authMiddleware, upload.single("avatar"), usersControllers.avatarUpload)
 
 module.exports = userRouter

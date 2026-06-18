@@ -34,28 +34,27 @@ const NewBlogPost = props => {
       title: title,
       category: category,
       content: text,
-      cover: coverUrl || "https://picsum.photos/1000/300",
+      cover: "",
       readTime: {
         value: Number(readTimeValue),
         unit: "minuti"
-      },
-      author: {
-        name: authorName,
-        avatar: "https://picsum.photos/50/50"
       }
     };
+
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:9999/blogPosts/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(nuovoPost),
       });
 
       if (response.ok) {
 
-        const savedPost = response.json()
+        const savedPost = await response.json()
 
         if (coverUrl) {
           const formData = new FormData()
@@ -63,11 +62,14 @@ const NewBlogPost = props => {
 
           const coverResponse = await fetch(`http://localhost:9999/blogPosts/${savedPost._id}/cover`, {
             method: "PATCH",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            },
             body: formData
           })
-
-          if(!coverResponse.ok){
-            throw new Error ("Caricamenti cover non riuscita")
+          
+          if (!coverResponse.ok) {
+            throw new Error("Caricamenti cover non riuscita")
           }
         }
 
