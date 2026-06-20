@@ -14,7 +14,9 @@ const server = express()
 
 const PORT = process.env.PORT
 server.use(express.json()) 
-server.use(cors())
+server.use(cors({
+    origin: [process.env.FRONTENDURL, process.env.FRONTEND_ONLINE_URL]
+}))
 configurePassport() 
 server.use(passport.initialize())
 
